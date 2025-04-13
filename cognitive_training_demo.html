@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Training for Alzheimer's</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+        }
+        
+        .question-panel, .answer-panel {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .question-panel {
+            border-left: 5px solid #4a90e2;
+        }
+        
+        .answer-panel {
+            border-left: 5px solid #7ed321;
+        }
+        
+        .panel-header {
+            font-size: 1.5em;
+            color: #4a90e2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .content-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        
+        .number-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .number-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .target-number {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .spot-difference {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        
+        .image-container {
+            position: relative;
+            width: 45%;
+        }
+        
+        .image-box {
+            width: 100%;
+            height: 150px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .image-box .shape {
+            position: absolute;
+        }
+        
+        .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4a90e2;
+        }
+        
+        .rectangle {
+            width: 40px;
+            height: 20px;
+            background-color: #7ed321;
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid #ff9500;
+        }
+        
+        .language-question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .option {
+            padding: 10px 15px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: left;
+        }
+        
+        .option:hover, .number-cell:hover {
+            background-color: #d0e8f9;
+        }
+        
+        .correct-option {
+            background-color: #7ed321;
+            color: white;
+        }
+        
+        .correct-answer {
+            color: #7ed321;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-top: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .highlighted {
+            background-color: rgba(126, 211, 33, 0.3);
+            border: 2px solid #7ed321;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #3a80d2;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .progress-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+        }
+        
+        .active-dot {
+            background-color: #4a90e2;
+        }
+        
+        .completed-dot {
+            background-color: #7ed321;
+        }
+        
+        footer {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .number-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .number-cell {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cognitive Training for Alzheimer's</h1>
+        <p>Exercise your brain with these interactive challenges</p>
+    </header>
+    
+    <div class="container">
+        <div class="question-panel">
+            <div class="panel-header">Question</div>
+            <div class="content-box" id="question-content">
+                <p>Press the "Start Training" button to begin the exercises.</p>
+            </div>
+        </div>
+        
+        <div class="answer-panel">
+            <div class="panel-header">Answer</div>
+            <div class="content-box" id="answer-content">
+                <p>The answer will appear here after you respond to each question.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="button" id="start-button">Start Training</button>
+    </div>
+    
+    <div class="progress">
+        <div class="progress-dot" id="dot-1"></div>
+        <div class="progress-dot" id="dot-2"></div>
+        <div class="progress-dot" id="dot-3"></div>
+    </div>
+    
+    <footer>
+        <p>© 2025 Cognitive Training Demo</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionContent = document.getElementById('question-content');
+            const answerContent = document.getElementById('answer-content');
+            const startButton = document.getElementById('start-button');
+            const progressDots = [
+                document.getElementById('dot-1'),
+                document.getElementById('dot-2'),
+                document.getElementById('dot-3')
+            ];
+            
+            let currentExercise = 0;
+            let exercises = [
+                {
+                    question: function() {
+                        return `
+                            <p>Find and count all the number 7's in the grid below:</p>
+                            <div class="number-grid">
+                                ${generateNumberGrid()}
+                            </div>
+                        `;
+                    },
+                    answer: function() {
+                        const totalSevens = document.querySelectorAll('.number-cell.target-number').length;
+                        return `
+                            <p>There are <span class="correct-answer">${totalSevens} occurrences</span> of the number 7 in the grid.</p>
+                            <div class="number-grid">
+                                ${highlightTargetNumbers()}
+                            </div>
+                        `;
+                    }
+                },
+                {
+                    question: function() {
+                        return `
+                            <p>Spot the difference between these two images:</p>
+                            <div class="spot-difference">
+                                <div class="image-container">
+                                    <div class="image-box" id="image-1">
+                                        <div class="shape circle" style="top: 30px; left: 40px;"></div>
+                                        <div class="shape rectangle" style="bottom: 20px; right: 30px;"></div>
+                                        <div class="shape triangle" style="top: 50px; right: 50px;"></div>
+                                    </div>
+                                    <p>Image 1</p>
+                                </div>
+                                <div class="image-container">
+                                    <div class="image-box" id="image-2">
+                                        <div class="shape circle" style="top: 30px; left: 40px;"></div>
+                                        <div class="shape rectangle" style="bottom: 20px; right: 30px;"></div>
+                                        <div class="shape triangle" style="top: 80px; right: 50px;"></div>
+                                    </div>
+                                    <p>Image 2</p>
+                                </div>
+                            </div>
+                        `;
+                    },
+                    answer: function() {
+                        return `
+                            <p>The difference is: <span class="correct-answer">The triangle position</span></p>
+                            <div class="spot-difference">
+                                <div class="image-container">
+                                    <div class="image-box">
+                                        <div class="shape circle" style="top: 30px; left: 40px;"></div>
+                                        <div class="shape rectangle" style="bottom: 20px; right: 30px;"></div>
+                                        <div class="shape triangle" style="top: 50px; right: 50px;"></div>
+                                    </div>
+                                    <p>Image 1</p>
+                                </div>
+                                <div class="image-container">
+                                    <div class="image-box">
+                                        <div class="shape circle" style="top: 30px; left: 40px;"></div>
+                                        <div class="shape rectangle" style="bottom: 20px; right: 30px;"></div>
+                                        <div class="shape triangle highlighted" style="top: 80px; right: 50px;"></div>
+                                    </div>
+                                    <p>Image 2</p>
+                                </div>
+                            </div>
+                            <p>In Image 2, the triangle is positioned lower than in Image 1.</p>
+                        `;
+                    }
+                },
+                {
+                    question: function() {
+                        return `
+                            <div class="language-question">
+                                <p>What is the correct translation for "Good morning"?</p>
+                                <div class="options">
+                                    <div class="option" data-correct="false">Good night</div>
+                                    <div class="option" data-correct="true">Buenos días</div>
+                                    <div class="option" data-correct="false">Good evening</div>
+                                    <div class="option" data-correct="false">Buenas noches</div>
+                                </div>
+                            </div>
+                        `;
+                    },
+                    answer: function() {
+                        return `
+                            <div class="language-question">
+                                <p>What is the correct translation for "Good morning"?</p>
+                                <div class="options">
+                                    <div class="option">Good night</div>
+                                    <div class="option correct-option">Buenos días</div>
+                                    <div class="option">Good evening</div>
+                                    <div class="option">Buenas noches</div>
+                                </div>
+                                <p class="correct-answer">The correct answer is "Buenos días"</p>
+                            </div>
+                        `;
+                    }
+                }
+            ];
+            
+            function generateNumberGrid() {
+                let grid = '';
+                const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                const targetNumber = 7;
+                const targetCount = Math.floor(Math.random() * 3) + 4; // 4-6 occurrences
+                
+                for (let i = 0; i < 25; i++) {
+                    let num;
+                    if (i < targetCount) {
+                        num = targetNumber;
+                    } else {
+                        num = numbers[Math.floor(Math.random() * numbers.length)];
+                        while (num === targetNumber) {
+                            num = numbers[Math.floor(Math.random() * numbers.length)];
+                        }
+                    }
+                    
+                    const isTarget = num === targetNumber;
+                    grid += `<div class="number-cell ${isTarget ? 'target-number' : ''}">${num}</div>`;
+                }
+                
+                return shuffleGrid(grid);
+            }
+            
+            function shuffleGrid(grid) {
+                // Parse the grid HTML to get cell content and classes
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = grid;
+                const cells = Array.from(tempDiv.children);
+                
+                // Create an array of cell data
+                const cellData = cells.map(cell => ({
+                    number: cell.textContent,
+                    isTarget: cell.classList.contains('target-number')
+                }));
+                
+                // Shuffle the cell data array
+                for (let i = cellData.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [cellData[i], cellData[j]] = [cellData[j], cellData[i]];
+                }
+                
+                // Recreate the grid HTML from the shuffled data
+                return cellData.map(cell => 
+                    `<div class="number-cell ${cell.isTarget ? 'target-number' : ''}">${cell.number}</div>`
+                ).join('');
+            }
+            
+            function highlightTargetNumbers() {
+                let gridHTML = document.querySelector('.number-grid').innerHTML;
+                return gridHTML;
+            }
+            
+            function nextExercise() {
+                if (currentExercise < exercises.length) {
+                    startButton.disabled = true;
+                    startButton.textContent = "Next Exercise";
+                    
+                    // Update progress dots
+                    progressDots.forEach((dot, index) => {
+                        if (index < currentExercise) {
+                            dot.className = "progress-dot completed-dot";
+                        } else if (index === currentExercise) {
+                            dot.className = "progress-dot active-dot";
+                        } else {
+                            dot.className = "progress-dot";
+                        }
+                    });
+                    
+                    // Show question
+                    questionContent.innerHTML = exercises[currentExercise].question();
+                    answerContent.innerHTML = "<p>Thinking...</p>";
+                    
+                    // After 5 seconds, show the answer
+                    setTimeout(() => {
+                        answerContent.innerHTML = exercises[currentExercise].answer();
+                        startButton.disabled = false;
+                        
+                        if (currentExercise === exercises.length - 1) {
+                            startButton.textContent = "Restart Training";
+                        }
+                        
+                        currentExercise++;
+                    }, 5000);
+                } else {
+                    // Reset to beginning
+                    currentExercise = 0;
+                    startButton.textContent = "Start Training";
+                    questionContent.innerHTML = "<p>Press the \"Start Training\" button to begin the exercises.</p>";
+                    answerContent.innerHTML = "<p>The answer will appear here after you respond to each question.</p>";
+                    
+                    // Reset progress dots
+                    progressDots.forEach(dot => {
+                        dot.className = "progress-dot";
+                    });
+                }
+            }
+            
+            startButton.addEventListener('click', nextExercise);
+            
+            // Make options clickable in language exercise
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('option')) {
+                    const options = document.querySelectorAll('.option');
+                    options.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    e.target.classList.add('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
